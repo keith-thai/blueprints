@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "random_string" "kv_name" {
-  length  = 23 - length(random_string.prefix.result)
+  length  = 4
   special = false
   upper   = false
   number  = true

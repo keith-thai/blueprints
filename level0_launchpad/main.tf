@@ -1,5 +1,7 @@
 provider "azurerm" {
   version = "=1.33.1"
+
+  subscription_id = "ffa196b5-0de0-4d46-9816-b7bfc775bc23"
 }
 
 provider "azuread" {
