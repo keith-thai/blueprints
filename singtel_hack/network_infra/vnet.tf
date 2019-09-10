@@ -55,9 +55,8 @@ resource "azurerm_virtual_network" "vnet" {
   }
 }
 
-output "sg_ids" {
+output "sg_map" {
   depends_on = [azurerm_network_security_group.sg]
-
   value = {
     for group in keys(azurerm_network_security_group.sg):
      group => azurerm_network_security_group.sg[group].id
