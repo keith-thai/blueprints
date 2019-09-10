@@ -12,7 +12,7 @@ resource "azurerm_network_interface" "main" {
   resource_group_name = "${var.resource_group}"
 
   ip_configuration {
-    name                          = "Test Configuration"
+    name                          = "TestConfiguration"
     subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "Dynamic"
   }

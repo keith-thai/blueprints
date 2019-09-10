@@ -15,7 +15,7 @@ resource "azurerm_sql_server" "test" {
 }
 
 resource "azurerm_sql_database" "test" {
-  name                = "${var.sql_server_name}"
+  name                = "${var.sql_db_name}"
   resource_group_name = "${var.resource_group}"
   location            = "${var.location}"
   server_name         = "${azurerm_sql_server.test.name}"
