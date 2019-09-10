@@ -3,18 +3,21 @@ vnet_name = "vnet-1"
 subnets = {
     sn1 = "web-subnet",
     sn2 = "app-subnet",
-    sn3 = "db-subnet"
+    sn3 = "db-subnet",
+    sn4 = "mgmt-subnet"
 }
 security_groups = {
     app = "app-nsg",
     db  = "db-nsg",
     web = "web-nsg"
+    #mgmt= "mgmt-nsg"
 }
 
-security_groups_rules=[
-    "rule_name;   nsg_name;     Type;     protocol;   access;    priority;  source_sg_ids",
-    "app-nsg;"
-]
+
+# security_groups_rules=[
+#     "rule_name;   nsg_name;     Type;     protocol;   access;    priority;  source_sg_ids",
+#     "app-nsg;"
+# ]
 
 # Azure Subscription activity logs retention period
 azure_activity_logs_retention = 365

@@ -5,18 +5,38 @@ variable "network_interface_id" {}
 variable "vm_size" {}
 variable "subnet_id" {}
 
+resource "azurerm_public_ip" "myterraformpublicip" {
+    name                         = "myPublicIP"
+    location                     = "${var.location}"
+    resource_group_name          = "${var.resource_group}"
+    allocation_method            = "Dynamic"
+
+    tags = {
+        environment = "Dev"
+    }
+}
+
+resource "azurerm_network_security_group" "mgmtsg" {
+  
+  name                = "mgmt-nsg"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group}"
+}
 
 resource "azurerm_network_interface" "main" {
   name                          = "${var.vm_prefix}-nic"
   location                      = "${var.location}"
   resource_group_name           = "${var.resource_group}"
+  network_security_group_id     = "${azurerm_network_security_group.mgmtsg.id}"
 
   ip_configuration {
     name                          = "TestConfiguration"
     subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.myterraformpublicip.id}"
   }
 }
+
 
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.vm_prefix}-vm"
@@ -55,6 +75,33 @@ resource "azurerm_virtual_machine" "main" {
   tags = {
     environment = "Dev"
   }
+}
+
+resource "azurerm_network_security_rule" "ssh-in" {
+  name                        = "ssh-in"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = "${var.resource_group}"
+  network_security_group_name = "${azurerm_network_security_group.mgmtsg.name}"
+}
+resource "azurerm_network_security_rule" "ssh-out" {
+  name                        = "ssh-out"
+  priority                    = 101
+  direction                   = "Outbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = "${var.resource_group}"
+  network_security_group_name = "${azurerm_network_security_group.mgmtsg.name}"
 }
 
 output "vm_ids" {
