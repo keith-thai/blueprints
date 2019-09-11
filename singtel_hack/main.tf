@@ -22,6 +22,7 @@ module "network_infra" {
     core_rg                   = module.resource_group_hub.names["HUB-CORE-SEC"]
     operations_rg             = module.resource_group_hub.names["HUB-OPERATIONS"]
     location                  = var.location_map["region1"]
+    tags                      = var.tags_resources
 }
 
 module "workload_infra" {
@@ -31,4 +32,5 @@ module "workload_infra" {
     security_groups           = var.security_groups
     resource_group            = module.resource_group_hub.names["HUB-CORE-SEC"]
     location                  = var.location_map["region1"]
+    tags                      = var.tags_resources
 }

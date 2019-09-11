@@ -4,6 +4,7 @@ variable "resource_group" {}
 variable "network_interface_id" {}
 variable "vm_size" {}
 variable "subnet_id" {}
+variable "tags" { type = "map"}
 
 
 resource "azurerm_network_interface" "main" {
@@ -16,6 +17,7 @@ resource "azurerm_network_interface" "main" {
     subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "Dynamic"
   }
+  tags                          = "${var.tags}"
 }
 
 resource "azurerm_virtual_machine" "main" {
@@ -52,9 +54,7 @@ resource "azurerm_virtual_machine" "main" {
   os_profile_linux_config {
     disable_password_authentication = false
   }
-  tags = {
-    environment = "Dev"
-  }
+  tags          = "${var.tags}"
 }
 
 output "vm_ids" {

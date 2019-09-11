@@ -5,22 +5,22 @@ variable "network_interface_id" {}
 variable "vm_size" {}
 variable "subnet_id" {}
 
+variable "tags" {type="map"}
+
 resource "azurerm_public_ip" "myterraformpublicip" {
     name                         = "myPublicIP"
     location                     = "${var.location}"
     resource_group_name          = "${var.resource_group}"
     allocation_method            = "Dynamic"
 
-    tags = {
-        environment = "Dev"
-    }
+    tags                         = "${var.tags}"
 }
 
 resource "azurerm_network_security_group" "mgmtsg" {
   
   name                = "mgmt-nsg"
   location            = "${var.location}"
-  resource_group_name = "${var.resource_group}"
+  resource_group_name = "${var.resource_group}" 
 }
 
 resource "azurerm_network_interface" "main" {
@@ -35,6 +35,7 @@ resource "azurerm_network_interface" "main" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = "${azurerm_public_ip.myterraformpublicip.id}"
   }
+  tags                            = "${var.tags}"  
 }
 
 
@@ -72,9 +73,7 @@ resource "azurerm_virtual_machine" "main" {
   os_profile_linux_config {
     disable_password_authentication = false
   }
-  tags = {
-    environment = "Dev"
-  }
+  tags             = "${var.tags}"
 }
 
 resource "azurerm_network_security_rule" "ssh-in" {

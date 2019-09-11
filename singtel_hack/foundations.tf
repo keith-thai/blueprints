@@ -42,10 +42,10 @@ module "log_analytics" {
   solution_plan_map   = var.solution_plan_map
 }
 
-# Create the Azure Security Center workspace
+#Create the Azure Security Center workspace
 # module "security_center" {
-#   #source = "git://github.com/aztfmod/azure_security_center.git?ref=v0.8"
-#   source = "../../azure_security_center"
+#   source = "git://github.com/aztfmod/azure_security_center.git?ref=v0.8"
+#   #source = "../../azure_security_center"
 
 #   contact_email = var.security_center["contact_email"]
 #   contact_phone = var.security_center["contact_phone"]

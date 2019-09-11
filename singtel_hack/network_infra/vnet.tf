@@ -10,6 +10,7 @@ variable "security_groups" {type = "map"}
 
 variable "subnets" {type = "map"}
 
+variable "tags" {type = "map"}
 
 resource "azurerm_network_security_group" "sg" {
   for_each            = var.security_groups
@@ -17,6 +18,7 @@ resource "azurerm_network_security_group" "sg" {
   name                = "${each.value}"
   location            = var.location
   resource_group_name = var.core_rg
+  tags                = var.tags
 }
 
 resource "azurerm_network_security_rule" "mgmnt-in" {
@@ -73,9 +75,7 @@ resource "azurerm_virtual_network" "vnet" {
     #security_group = local.sg_map["mgmt"]
   }
 
-  tags = {
-    environment = "DEV"
-  }
+  tags                = var.tags
 }
 
 output "sg_map" {

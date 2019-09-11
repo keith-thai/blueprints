@@ -45,6 +45,14 @@ tags_hub = {
     costCenter      = "1664"
     BusinessUnit    = "SHARED"
     DR              = "NON-DR-ENABLED"
+    Project         = "Singtel-Hackathon"
+  }
+
+  tags_resources = {
+    environment     = "DEV"
+    owner           = "SingtelEDMS"
+    costCenter      = "1664"
+    Project         = "Singtel-Hackathon"
   }
 
 #Logging and monitoring 

@@ -48,6 +48,11 @@ variable "tags_hub" {
   type    = map(string)
 }
 
+variable "tags_resources" {
+  description = "map of the tags to be applied"
+  type    = map(string)
+}
+
 variable "azure_activity_logs_retention" {
     description = "Retention period to keep the Azure Activity Logs in the Azure Storage Account"
 }

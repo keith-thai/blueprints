@@ -4,6 +4,8 @@ variable "security_groups" {type = "map"}
 
 variable "sg_map" {type = "map"}
 
+variable "tags" {type = "map"}
+
 variable "resource_group" {}
 
 variable "location" {}
@@ -41,6 +43,7 @@ module "app-vm" {
     network_interface_id                = "${var.location}"
     subnet_id                           = "${data.azurerm_subnet.app.id}"
     vm_size                             = "Standard_DS1_v2"
+    tags                                = "${var.tags}"
 }
 
 module "web-vm" {
@@ -51,6 +54,7 @@ module "web-vm" {
     network_interface_id                = "${var.location}"
     subnet_id                           = "${data.azurerm_subnet.web.id}"  
     vm_size                             = "Standard_DS1_v2"
+    tags                                = "${var.tags}"
 }
 
 module "mgmt-vm" {
@@ -61,6 +65,7 @@ module "mgmt-vm" {
     network_interface_id                = "${var.location}"
     subnet_id                           = "${data.azurerm_subnet.mgmt.id}"  
     vm_size                             = "Standard_DS1_v2"
+    tags                                = "${var.tags}"
 }
 
 module "db-vm" {
@@ -69,6 +74,7 @@ module "db-vm" {
     sql_db_name                         = "sgsqldatabase"
     location                            = "${var.location}"
     resource_group                      = "${var.resource_group}"
+    tags                                = "${var.tags}"    
 }
 
 module "web-lb" {
@@ -80,7 +86,5 @@ module "web-lb" {
     subnet_id                           = "${data.azurerm_subnet.web.id}"  
     vm_size                             = "Standard_DS1_v2"
     networkInterface                    = module.web-vm.network_ids
-
-    
 }
 
