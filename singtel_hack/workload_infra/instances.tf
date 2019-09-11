@@ -63,10 +63,24 @@ module "mgmt-vm" {
     vm_size                             = "Standard_DS1_v2"
 }
 
-# module "db-vm" {
-#     source                              = "../resources/db"
-#     sql_server_name                     = "mysqlserver"
-#     sql_db_name                         = "mysqldatabase"
-#     location                            = "${var.location}"
-#     resource_group                      = "${var.resource_group}"
-# }
+module "db-vm" {
+    source                              = "../resources/db"
+    sql_server_name                     = "sgsqlserver"
+    sql_db_name                         = "sgsqldatabase"
+    location                            = "${var.location}"
+    resource_group                      = "${var.resource_group}"
+}
+
+module "web-lb" {
+    source                              = "../resources/lb"
+    lb_prefix                           = "lb"
+    location                            = "${var.location}"
+    resource_group                      = "${var.resource_group}"
+    network_interface_id                = "${var.location}"
+    subnet_id                           = "${data.azurerm_subnet.web.id}"  
+    vm_size                             = "Standard_DS1_v2"
+    networkInterface                    = module.web-vm.network_ids
+
+    
+}
+
