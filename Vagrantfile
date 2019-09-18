@@ -25,24 +25,71 @@ Vagrant.configure("2") do |config|
     apt-get update
 	
 	#Utils
-	apt-get install unzip -y
-	apt-get install jq -y
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' unzip|grep "install ok installed")
+	echo Checking for unzip: $PKG_OK
+	if [ "" == "$PKG_OK" ]; then
+		echo "No unzip. Setting up"
+		sudo apt-get --force-yes --yes install unzip
+	fi
+	
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' jq|grep "install ok installed")
+	echo Checking for jq: $PKG_OK
+	if [ "" == "$PKG_OK" ]; then
+		echo "No jq. Setting up"
+		sudo apt-get --force-yes --yes install jq
+	fi	
+	
+	#apt-get install unzip -y
+	#apt-get install jq -y
+	
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' python-dev|grep "install ok installed")
+	echo Checking for python-dev: $PKG_OK
+	if [ "" == "$PKG_OK" ]; then
+		echo "No python-dev. Setting up"
+		sudo apt-get --force-yes --yes install python-dev python-pip
+	fi	
 	
 	#Python
-	apt-get install python-dev python-pip -q -y
+	#apt-get install python-dev python-pip -q -y
 	
 	#Install AWS cli and boto3
-	pip install awscli --upgrade --user
-	pip install boto3
-	
+	echo "Checking for awscli"
+	PKG_OK=$(command -v aws)
+	echo "Checking for aws-cli": $PKG_OK
+	if ! [ -x "$PKG_OK" ]; then	
+		pip install awscli --upgrade
+		pip install boto3
+	fi
 	#Install Azure CLI
-	curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash	
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' azure-cli|grep "install ok installed")
+	echo Checking for azure-cli: $PKG_OK
+	if [ "" == "$PKG_OK" ]; then
+		echo "No azure-cli. Setting up"
+		curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash	
+	fi		
 	
-	#Install Terraform
-	wget https://releases.hashicorp.com/terraform/0.12.7/terraform_0.12.7_linux_amd64.zip
-	unzip terraform_0.12.7_linux_amd64.zip
-	mv terraform /usr/local/bin/
-	terraform --version 
+	#Install Terraform v 12.7
+	PKG_OK=$(command -v terraform)
+	echo "Checking for terraform": $PKG_OK
+	if ! [ -x "$PKG_OK" ]; then
+		#Install Terraform
+		echo "No Terraform. Setting up"
+		wget https://releases.hashicorp.com/terraform/0.12.7/terraform_0.12.7_linux_amd64.zip
+		unzip terraform_0.12.7_linux_amd64.zip
+		mv terraform /usr/local/bin/
+		terraform --version 
+	fi	
+	
+	#Install Ansible
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' ansible|grep "install ok installed")
+	echo Checking for ansible: $PKG_OK
+	if [ "" == "$PKG_OK" ]; then
+		echo "No ansible. Setting up"
+		sudo apt install software-properties-common
+		sudo apt-add-repository ppa:ansible/ansible -y
+		sudo apt update
+		sudo apt install ansible --force-yes --yes
+	fi		
 	
   SHELL
   
